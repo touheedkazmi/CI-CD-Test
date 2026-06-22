@@ -4,7 +4,7 @@ public with sharing class ContactServiceHandler {
         
         String name = [SELECT Name FROM Contact WHERE Id = :Id LIMIT 1
         ].Name;
-        System.debug('Contact Name: ' + name);
+        
         return name;
 
     }
