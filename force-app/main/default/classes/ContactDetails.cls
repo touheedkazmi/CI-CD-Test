@@ -6,3 +6,4 @@ public with sharing class ContactDetails {
         ].Name;
         return Name;
 }
+}
