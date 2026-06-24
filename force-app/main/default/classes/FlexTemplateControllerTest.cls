@@ -6,11 +6,7 @@ private class FlexTemplateControllerTest {
             HttpResponse res = new HttpResponse();
             res.setHeader('Content-Type', 'application/json');
             res.setStatusCode(200);
-            res.setBody('{
-                "generations": [
-                    {"text": "Mock template response"}
-                ]
-            }');
+            res.setBody('{"generations":[{"text":"Mock template response"}]}');
             return res;
         }
     }
