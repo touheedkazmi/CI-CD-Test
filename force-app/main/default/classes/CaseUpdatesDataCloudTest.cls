@@ -17,7 +17,7 @@ private class CaseUpdatesDataCloudTest {
         );
         insert testCase;
 
-        List<Schema.PicklistEntry> priorityEntries = Schema.SObjectType.Case.fields.Priority.getDescribe().getPicklistValues();
+        List<Schema.PicklistEntry> priorityEntries = Schema.SObjectType.Case.fields.Priority.getPicklistValues();
         String validPriority = priorityEntries.isEmpty() ? 'High' : priorityEntries[0].getValue();
 
         CaseUpdatesDataCloud.InputWrapper input = new CaseUpdatesDataCloud.InputWrapper();

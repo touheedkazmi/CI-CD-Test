@@ -6,7 +6,7 @@ private class AccountSummaryPromptTest {
         Account acc = new Account(Name = 'Test Account');
         insert acc;
 
-        List<Schema.PicklistEntry> ratingEntries = Schema.SObjectType.Soft_Drink__c.fields.Rating__c.getDescribe().getPicklistValues();
+        List<Schema.PicklistEntry> ratingEntries = Schema.SObjectType.Soft_Drink__c.fields.Rating__c.getPicklistValues();
         String validRating = ratingEntries.isEmpty() ? null : ratingEntries[0].getValue();
         System.assertNotEquals(null, validRating, 'There should be at least one valid Rating__c picklist value');
 

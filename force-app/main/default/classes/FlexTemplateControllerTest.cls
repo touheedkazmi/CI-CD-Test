@@ -45,7 +45,5 @@ private class FlexTemplateControllerTest {
             System.assertEquals('Mock template response', result);
         }
         Test.stopTest();
-
-        System.assertEquals('Mock template response', result);
     }
 }
