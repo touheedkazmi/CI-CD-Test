@@ -8,10 +8,10 @@ public with sharing class ContactDetailsTest {
         insert testContact;
 
         // Call the method to get the contact name
-        String contactName = ContactDetails.getContactName(testContact.Id);
+        String contactNameUpdated = ContactDetails.getContactName(testContact.Id);
 
         // Assert that the returned name is correct
-        System.assertEquals('John Doe', contactName);
+        System.assertEquals('John Doe', contactNameUpdated);
     }
     
 }
