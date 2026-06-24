@@ -3,9 +3,13 @@ private class SoftDrinkOrderStatusTest {
 
     @isTest
     static void testGetStatusReturnsOrderStatus() {
+        List<Schema.PicklistEntry> picklistValues = Schema.SObjectType.Soft_Drink_Order__c.fields.Status__c.getDescribe().getPicklistValues();
+        String validStatus = picklistValues.isEmpty() ? null : picklistValues[0].getValue();
+        System.assertNotEquals(null, validStatus, 'There should be at least one valid Status__c picklist value');
+
         Soft_Drink_Order__c softDrinkOrder = new Soft_Drink_Order__c(
             Order_Number__c = 101,
-            Status__c = 'Delivered'
+            Status__c = validStatus
         );
         insert softDrinkOrder;
 
@@ -16,6 +20,6 @@ private class SoftDrinkOrderStatusTest {
         Test.stopTest();
 
         System.assertEquals(1, statusList.size(), 'Expected one status result');
-        System.assertEquals('Delivered', statusList[0], 'Expected the status to match the inserted order');
+        System.assertEquals(validStatus, statusList[0], 'Expected the status to match the inserted order');
     }
 }
