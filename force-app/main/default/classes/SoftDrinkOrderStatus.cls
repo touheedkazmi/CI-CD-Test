@@ -6,6 +6,6 @@ public without sharing class SoftDrinkOrderStatus {
         
         Soft_Drink_Order__c sd = [Select ID,Status__c from Soft_Drink_Order__c where Order_Number__c=:orderNumber[0] ];
         return new List<String> { sd.Status__c };
-
+ 
     }
 }
