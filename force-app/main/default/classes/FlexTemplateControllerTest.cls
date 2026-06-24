@@ -13,13 +13,15 @@ private class FlexTemplateControllerTest {
 
     @isTest
     static void testGetFlexTemplateResponseReturnsMockResult() {
-        List<Schema.PicklistEntry> softDrinkRatings = Schema.SObjectType.Soft_Drink__c.fields.Rating__c.getPicklistValues();
+        Schema.DescribeFieldResult softDrinkFieldDescribe = Schema.getGlobalDescribe().get('Soft_Drink__c').getDescribe().fields.getMap().get('Rating__c').getDescribe();
+        List<Schema.PicklistEntry> softDrinkRatings = softDrinkFieldDescribe.getPicklistValues();
         String ratingValue = softDrinkRatings.isEmpty() ? 'A' : softDrinkRatings[0].getValue();
 
         Account acc = new Account(Name = 'Test Account', Rating = ratingValue);
         insert acc;
 
-        Boolean productRatingCreateable = Schema.SObjectType.Product2.fields.Rating__c.getDescribe().isCreateable();
+        Schema.DescribeFieldResult productRatingFieldDescribe = Schema.getGlobalDescribe().get('Product2').getDescribe().fields.getMap().get('Rating__c').getDescribe();
+        Boolean productRatingCreateable = productRatingFieldDescribe.isCreateable();
         if (productRatingCreateable) {
             Product2 product1 = new Product2(Name = 'Product 1', Rating__c = ratingValue);
             Product2 product2 = new Product2(Name = 'Product 2', Rating__c = ratingValue);
@@ -29,7 +31,8 @@ private class FlexTemplateControllerTest {
             System.assertEquals(2, existingProducts.size(), 'Need two existing Product2 records with Rating__c accessible');
         }
 
-        Boolean softDrinkRatingCreateable = Schema.SObjectType.Soft_Drink__c.fields.Rating__c.getDescribe().isCreateable();
+        Schema.DescribeFieldResult softDrinkRatingFieldDescribe = Schema.getGlobalDescribe().get('Soft_Drink__c').getDescribe().fields.getMap().get('Rating__c').getDescribe();
+        Boolean softDrinkRatingCreateable = softDrinkRatingFieldDescribe.isCreateable();
         if (softDrinkRatingCreateable) {
             Soft_Drink__c drink1 = new Soft_Drink__c(Name = 'Drink 1', Rating__c = ratingValue);
             Soft_Drink__c drink2 = new Soft_Drink__c(Name = 'Drink 2', Rating__c = ratingValue);
