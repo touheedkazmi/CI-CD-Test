@@ -17,10 +17,13 @@ private class CaseUpdatesDataCloudTest {
         );
         insert testCase;
 
+        List<Schema.PicklistEntry> priorityEntries = Schema.SObjectType.Case.fields.Priority.getDescribe().getPicklistValues();
+        String validPriority = priorityEntries.isEmpty() ? 'High' : priorityEntries[0].getValue();
+
         CaseUpdatesDataCloud.InputWrapper input = new CaseUpdatesDataCloud.InputWrapper();
         input.queueDeveloperName = 'Test_Queue';
         input.caseId = testCase.Id;
-        input.priority = 'High';
+        input.priority = validPriority;
 
         List<CaseUpdatesDataCloud.InputWrapper> inputList = new List<CaseUpdatesDataCloud.InputWrapper>{ input };
 
@@ -36,6 +39,6 @@ private class CaseUpdatesDataCloudTest {
 
         Case updatedCase = [SELECT Id, OwnerId, Priority FROM Case WHERE Id = :testCase.Id];
         System.assertEquals(queueGroup.Id, updatedCase.OwnerId, 'The case owner should be updated to the queue');
-        System.assertEquals('High', updatedCase.Priority, 'The case priority should be updated');
+        System.assertEquals(validPriority, updatedCase.Priority, 'The case priority should be updated');
     }
 }

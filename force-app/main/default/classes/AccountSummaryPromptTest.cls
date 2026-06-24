@@ -6,7 +6,11 @@ private class AccountSummaryPromptTest {
         Account acc = new Account(Name = 'Test Account');
         insert acc;
 
-        Soft_Drink__c drink = new Soft_Drink__c(Name = 'Test Drink', Rating__c = 'A');
+        List<Schema.PicklistEntry> ratingEntries = Schema.SObjectType.Soft_Drink__c.fields.Rating__c.getDescribe().getPicklistValues();
+        String validRating = ratingEntries.isEmpty() ? null : ratingEntries[0].getValue();
+        System.assertNotEquals(null, validRating, 'There should be at least one valid Rating__c picklist value');
+
+        Soft_Drink__c drink = new Soft_Drink__c(Name = 'Test Drink', Rating__c = validRating);
         insert drink;
 
         Soft_Drink_Order__c order = new Soft_Drink_Order__c(
