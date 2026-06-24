@@ -1,4 +1,4 @@
-name: Deploy to Salesforce
+name: Deploy to UAT
 
 on:
   push:
@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -19,15 +18,16 @@ jobs:
           npm install -g @salesforce/cli
           sf version
 
-      - name: Authenticate Org
+      - name: Authenticate UAT Org
         run: |
-          echo "${{ secrets.SFDX_AUTH_URL }}" > authfile.txt
+          echo "${{ secrets.UAT_AUTH_URL }}" > authfile.txt
           sf org login sfdx-url \
             --sfdx-url-file authfile.txt \
-            --alias targetOrg
+            --alias uatOrg
 
       - name: Deploy Metadata
         run: |
           sf project deploy start \
-            --target-org targetOrg \
-            --source-dir force-app
+            --target-org uatOrg \
+            --source-dir force-app \
+            --wait 60
