@@ -3,7 +3,9 @@ private class SoftDrinkOrderStatusTest {
 
     @isTest
     static void testGetStatusReturnsOrderStatus() {
-        List<Schema.PicklistEntry> picklistValues = Schema.SObjectType.Soft_Drink_Order__c.fields.Status__c.getDescribe().getPicklistValues();
+        Schema.DescribeSObjectResult describeResult = Schema.getGlobalDescribe().get('Soft_Drink_Order__c').getDescribe();
+        Schema.DescribeFieldResult fieldDescribe = describeResult.fields.getMap().get('Status__c').getDescribe();
+        List<Schema.PicklistEntry> picklistValues = fieldDescribe.getPicklistValues();
         String validStatus = picklistValues.isEmpty() ? null : picklistValues[0].getValue();
         System.assertNotEquals(null, validStatus, 'There should be at least one valid Status__c picklist value');
 
