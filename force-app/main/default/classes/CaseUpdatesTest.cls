@@ -20,7 +20,7 @@ public with sharing class CaseUpdatesTest {
 
         // Call the invocable method
         Test.startTest();
-        List<CaseUpdates.OutputWrapper> outputList = CaseUpdates.assignCaseToQueue(inputList);
+        List<CaseUpdates.OutputWrapper> outputList = CaseUpdates.getQueueIdAndAssignCase(inputList);
         Test.stopTest();
 
         // Assert that the case was assigned to the queue
@@ -33,6 +33,6 @@ public with sharing class CaseUpdatesTest {
         Case updatedCase = [SELECT Id, OwnerId FROM Case WHERE Id = :testCase.Id];
         System.assertEquals(testQueue.Id, updatedCase.OwnerId);
     }
-    
+
     
 }
