@@ -42,7 +42,7 @@ private class FlexTemplateControllerTest {
                 Soft_Drink__c drink2 = new Soft_Drink__c(Name = 'Drink 2', Rating__c = ratingValue);
                 insert new List<Soft_Drink__c>{ drink1, drink2 };
             } else {
-                // skip creating soft drinks when Rating__c is not createable
+                // skip creating soft drinks when Rating__c is not createable 
             }
         }
 
