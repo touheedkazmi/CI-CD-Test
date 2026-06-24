@@ -4,7 +4,6 @@ private class SoftDrinkOrderStatusTest {
     @isTest
     static void testGetStatusReturnsOrderStatus() {
         Soft_Drink_Order__c softDrinkOrder = new Soft_Drink_Order__c(
-            Name = 'Test Order',
             Order_Number__c = 101,
             Status__c = 'Delivered'
         );
