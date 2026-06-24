@@ -9,7 +9,11 @@ private class SoftDrinkOrderStatusTest {
         String validStatus = picklistValues.isEmpty() ? null : picklistValues[0].getValue();
         System.assertNotEquals(null, validStatus, 'There should be at least one valid Status__c picklist value');
 
+        Soft_Drink__c softDrink = new Soft_Drink__c(Name = 'Test Soft Drink');
+        insert softDrink;
+
         Soft_Drink_Order__c softDrinkOrder = new Soft_Drink_Order__c(
+            Soft_Drink__c = softDrink.Id,
             Order_Number__c = 101,
             Status__c = validStatus
         );
