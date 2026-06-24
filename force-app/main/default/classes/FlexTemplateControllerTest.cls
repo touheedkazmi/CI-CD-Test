@@ -1,4 +1,4 @@
-@isTest(seeAllData=false)
+@isTest(seeAllData=true)
 private class FlexTemplateControllerTest {
 
     private class ConnectApiMock implements HttpCalloutMock {
@@ -13,37 +13,38 @@ private class FlexTemplateControllerTest {
 
     @isTest
     static void testGetFlexTemplateResponseReturnsMockResult() {
-        Account acc = new Account(Name = 'Test Account', Rating = 'A');
+        List<Schema.PicklistEntry> softDrinkRatings = Schema.SObjectType.Soft_Drink__c.fields.Rating__c.getPicklistValues();
+        String ratingValue = softDrinkRatings.isEmpty() ? 'A' : softDrinkRatings[0].getValue();
+
+        Account acc = new Account(Name = 'Test Account', Rating = ratingValue);
         insert acc;
 
-        Profile adminProfile = [SELECT Id FROM Profile WHERE Name = 'System Administrator' LIMIT 1];
-        User adminUser = new User(
-            Username = 'flexTemplateTest' + System.currentTimeMillis() + '@example.com',
-            Email = 'flexTemplateTest@example.com',
-            LastName = 'Test',
-            Alias = 'fttest',
-            TimeZoneSidKey = 'America/Los_Angeles',
-            LocaleSidKey = 'en_US',
-            EmailEncodingKey = 'UTF-8',
-            LanguageLocaleKey = 'en_US',
-            ProfileId = adminProfile.Id
-        );
-        insert adminUser;
+        Boolean productRatingCreateable = Schema.SObjectType.Product2.fields.Rating__c.getDescribe().isCreateable();
+        if (productRatingCreateable) {
+            Product2 product1 = new Product2(Name = 'Product 1', Rating__c = ratingValue);
+            Product2 product2 = new Product2(Name = 'Product 2', Rating__c = ratingValue);
+            insert new List<Product2>{ product1, product2 };
+        } else {
+            List<Product2> existingProducts = [SELECT Id FROM Product2 WHERE Rating__c = :ratingValue LIMIT 2];
+            System.assertEquals(2, existingProducts.size(), 'Need two existing Product2 records with Rating__c accessible');
+        }
+
+        Boolean softDrinkRatingCreateable = Schema.SObjectType.Soft_Drink__c.fields.Rating__c.getDescribe().isCreateable();
+        if (softDrinkRatingCreateable) {
+            Soft_Drink__c drink1 = new Soft_Drink__c(Name = 'Drink 1', Rating__c = ratingValue);
+            Soft_Drink__c drink2 = new Soft_Drink__c(Name = 'Drink 2', Rating__c = ratingValue);
+            insert new List<Soft_Drink__c>{ drink1, drink2 };
+        } else {
+            List<Soft_Drink__c> existingSoftDrinks = [SELECT Id FROM Soft_Drink__c WHERE Rating__c = :ratingValue LIMIT 2];
+            System.assertEquals(2, existingSoftDrinks.size(), 'Need two existing Soft_Drink__c records with Rating__c accessible');
+        }
+
+        Test.setMock(HttpCalloutMock.class, new ConnectApiMock());
 
         Test.startTest();
-        System.runAs(adminUser) {
-            Product2 product1 = new Product2(Name = 'Product 1', Rating__c = 'A');
-            Product2 product2 = new Product2(Name = 'Product 2', Rating__c = 'A');
-            insert new List<Product2>{ product1, product2 };
-
-            Soft_Drink__c drink1 = new Soft_Drink__c(Name = 'Drink 1', Rating__c = 'A');
-            Soft_Drink__c drink2 = new Soft_Drink__c(Name = 'Drink 2', Rating__c = 'A');
-            insert new List<Soft_Drink__c>{ drink1, drink2 };
-
-            Test.setMock(HttpCalloutMock.class, new ConnectApiMock());
-            String result = FlexTemplateController.getFlexTemplateResponse('Test Account', 'A');
-            System.assertEquals('Mock template response', result);
-        }
+        String result = FlexTemplateController.getFlexTemplateResponse('Test Account', ratingValue);
         Test.stopTest();
+
+        System.assertEquals('Mock template response', result);
     }
 }
