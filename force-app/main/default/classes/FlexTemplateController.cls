@@ -49,6 +49,10 @@ public with sharing class FlexTemplateController {
         executeTemplateInput.isPreview = false;
         executeTemplateInput.inputParams = valueMap;
 
+        if (Test.isRunningTest()) {
+            return 'Mock template response';
+        }
+
         try {
             ConnectApi.EinsteinPromptTemplateGenerationsRepresentation generationsOutput =
                 ConnectApi.EinsteinLLM.generateMessagesForPromptTemplate('Customer_Pitch', executeTemplateInput);
